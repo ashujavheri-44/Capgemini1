@@ -1,0 +1,71 @@
+﻿******1.1*****
+
+1.	List the Name and Designation code of the staff who have joined 
+before Jan 2003 and whose salary range is between 12000 and 25000. 
+Display the columns with user defined Column headers. 
+Hint: Use As clause along with other operators
+ Sol:
+SQL> select staff_name, design_code AS Designation from staff_master where staff_sal between 12000 and 25000 and hiredate > '01-Jan-2003';
+
+2.	List the staff code, name, and department number of 
+the staff who have experience of 18 or more years and sort them 
+based on their experience. 
+
+SQL> select staff_code, staff_name, dept_code from staff_master where round(months_between(sysdate, hiredate)/12)>18 order by hiredate;
+
+3. 	Display the staff details who do not have manager. Hint: Use is null
+SQL> select * from staff_master where MGR_code = null;
+
+4.	Display the Book details that were published during the period of 2001 to 2004. Also display book details with Book name having the character ‘&’ anywhere.
+
+SQL> select * from book_master where book_pub_year between 2001 and 2004 or book_name like '%\&%';
+
+5.	List the names of the staff having ‘_’ character in their name. 
+SQL> Select staff_name from staff_master where staff_name like '%\_%';
+
+
+******2.1*****
+1.	Create a query which will display Staff Name, Salary of each staff. Format the salary to be 15 characters long and left padded with ‘$’. 
+
+SQL> select staff_name, to_char(staff_sal, '$000000000000009.00') from staff_master;
+
+2. 	Display name and date of birth of students where date of birth must be displayed in the format similar to “January, 12 1981” for those who were born on Saturday or Sunday.
+
+SQL> select to_char(student_dob, 'Month, DD YYYY'), to_char(student_dob, 'DAY') from student_master where to_char(student_dob, 'D') IN (1, 7);
+
+3.	Display each Staff name and number of months they worked for the organization. Label the column as ‘Months Worked’. Order your result by number of months employed. Also Round the number of months to closest whole number.
+
+SQL> select staff_name, round((sysdate-hiredate)/30) AS "Months Worked" from staff_master order by "Months Worked" DESC;
+
+4.	List the details of the staff who have joined in first half of December month 
+
+SQL> select staff_name, hiredate from staff_master where to_char(hiredate, 'DD') <=15 AND to_char(hiredate, 'MM') = '12';
+
+5.	Write a query that displays Staff Name, Salary, and Grade of all staff. Grade depends on the following table. 
+
+SQL> select staff_name, staff_sal, CASE
+  2  WHEN staff_sal >=50000 THEN 'A'
+  3  WHEN staff_sal >=25000 and staff_sal <50000 THEN 'B'
+  4  WHEN staff_sal >=10000 and staff_sal <25000 then 'C'
+  5  else 'D'
+  6  END grade FROM staff_master;
+
+6.	Display the Staff Name, Hire date and day of the week on which staff was hired. Label the column as DAY. Order the result by the day of the week starting with Monday.        Hint :Use to_char with hiredate and formats ‘DY’ and ’D’
+
+SQL> select staff_name, hiredate, to_char(hiredate, 'DY') as DAY from staff_master order by DAY ASC;
+
+7.	Write a query to find the position of third occurrence of ‘i’ in the given word ‘Mississippi’. 
+SQL> select INSTR('Mississippi', 'i', 1, 3) from dual;
+---string, substring, start position, Nth occurence
+
+8.	Write a query to find the pay date for the month. Pay date is the last Friday of the month. Display the date in the format “Twenty Eighth of January, 2002”. Label the heading as PAY DATE. Hint: use to_char, next_day and last_day functions
+
+SQL> SELECT next_day(last_day(sysdate) - '7', 'FRIDAY') from dual;
+
+9.	Display Student code, Name and Dept Name. Display “Electricals” if dept code = 20, “Electronics” if Dept code =30 and “Others” for all other Dept codes in the Dept Name column. Hint : Use Decode 
+
+SQL> select student_code, student_name, case
+  2  when dept_code = 20 then 'Electricals'
+  3  when dept_code = 30 then 'Electronics'
+  4  else 'Others'
+  5  END DEPT_NAME from student_master;
